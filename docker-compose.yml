@@ -33,3 +33,15 @@ services:
     depends_on:
       redpanda:
         condition: service_healthy
+
+  result_viewer:
+    build: ./quiz_app_streamlit
+    container_name: quiz_result_viewer
+    command: ["app_result.py", "--server.port=8502", "--server.address=0.0.0.0"]
+    environment:
+      KAFKA_BROKER: redpanda:9092
+    ports:
+      - "8502:8502"
+    depends_on:
+      redpanda:
+        condition: service_healthy

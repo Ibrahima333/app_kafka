@@ -1,5 +1,4 @@
 import streamlit as st
-
 import json
 import os
 import random
@@ -79,7 +78,7 @@ st.set_page_config(page_title="Quiz Simple Kafka", page_icon="🧠", layout="cen
 st.title("Quiz Simple — Envoi Kafka")
 
 with st.sidebar:
-    utilisateur = st.text_input("👤 Votre nom", value="Joueur1")
+    utilisateur = st.text_input("Votre nom", value="Joueur1")
     nb_questions = st.slider("Nombre de questions", 1, 10, 3)
     cat_label = st.selectbox("Catégorie", list(CATEGORIES.keys()))
     diff_label = st.selectbox("Difficulté", list(DIFFICULTES.keys()))
@@ -123,6 +122,7 @@ elif index < len(questions):
             "categorie": q["categorie"],
             "difficulte": q["difficulte"],
             "reponse_choisie": reponse_choisie,
+            "bonne_reponse": q["bonne_reponse"]
         }
         producer.send(KAFKA_TOPIC, key=utilisateur, value=message)
         producer.flush()
@@ -131,6 +131,7 @@ elif index < len(questions):
         st.session_state.index += 1
         st.rerun()
 else:
+    st.balloons()
     st.success("Quiz terminé ! Relance pour rejouer.")
     if st.button("Nouveau Quiz", type="primary"):
         for k in defaults:
